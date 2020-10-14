@@ -39,9 +39,15 @@ const postRegister = asyncHandler(async (req, res) => {
   });
 
 const postLogin = asyncHandler(async(req,res) =>{
+  try {
     await User.authenticate (req.body)
     res.redirect ('/')
-    // token:user.generateToken()
+  }
+  catch(err){
+    res.redirect ('/login')
+  }
+    
+
 })
 
   module.exports = {
