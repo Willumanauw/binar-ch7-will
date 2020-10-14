@@ -1,24 +1,14 @@
-var createError = require('http-errors');
+// var createError = require('http-errors');
 var express = require('express');
+var app = express();
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-// const bcrypt = require('bcrypt')
-// const passport = require('passport')
-// const flash = require('express-flash')
-// const session = require('express-session')
-
-var indexRouter = require('./routes/index');
-var loginRouter = require('./routes/login');
-var registerRouter = require('./routes/register');
-
-
-var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+const session = require('express-session')
+const flash = require('express-flash')
+const authRoute = require('./routes/auth')
+const passport = require('./lib/passport')
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -26,9 +16,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/login', loginRouter);
-app.use('/register', registerRouter);
+app.use(session({
+  secret: 'Buat ini jadi rahasia',
+  resave: false,
+  saveUninitialized: false
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use(flash())
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+app.use('/', authRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
