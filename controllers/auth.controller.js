@@ -1,6 +1,6 @@
 const db = require('../models');
 const User = db.User;
-const passport = require('../lib/passport')
+// const passport = require('../lib/passport')
 
 /* Handler function to wrap each route. */
 function asyncHandler(cb){
@@ -32,18 +32,16 @@ const registerPage = asyncHandler(async (req,res) => {
 /* POST register page. */
 const postRegister = asyncHandler(async (req, res) => {
     await User.register(req.body)
-    .then(() => {
+    // .then(() => {
       res.redirect ('/login' )
-      })
-      .catch(err => next(err))
+      // })
+      // .catch(err => next(err))
   });
 
-const postLogin = asyncHandler (async(req,res) =>{
-  await passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true // Untuk mengaktifkan express flash
-    })
+const postLogin = asyncHandler(async(req,res) =>{
+    await User.authenticate (req.body)
+    res.redirect ('/')
+    // token:user.generateToken()
 })
 
   module.exports = {
