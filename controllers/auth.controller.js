@@ -1,5 +1,6 @@
 const db = require('../models');
 const User = db.User;
+const crypto = require('crypto');
 // const passport = require('../lib/passport')
 
 /* Handler function to wrap each route. */
@@ -33,7 +34,7 @@ const registerPage = asyncHandler(async (req,res) => {
 const postRegister = asyncHandler(async (req, res) => {
     await User.register(req.body)
     // .then(() => {
-      res.redirect ('/login' )
+    res.redirect ('/login' )
       // })
       // .catch(err => next(err))
   });
@@ -41,13 +42,12 @@ const postRegister = asyncHandler(async (req, res) => {
 const postLogin = asyncHandler(async(req,res) =>{
   try {
     await User.authenticate (req.body)
-    res.redirect ('/')
+    // res.redirect('/')
+    res.json({message:'Login success !!'})
   }
   catch(err){
     res.redirect ('/login')
   }
-    
-
 })
 
   module.exports = {
@@ -56,4 +56,4 @@ const postLogin = asyncHandler(async(req,res) =>{
     loginPage,
     postLogin,
     indexPage,
-  }
+ }
